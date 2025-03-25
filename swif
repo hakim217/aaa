@@ -1,0 +1,56 @@
+import Foundation
+
+struct Card: Identifiable, Hashable {
+    let id = UUID()
+    let value: String // "3", "As", "K", "Q", etc.
+    let suit: String // "♥", "♦", "♣", "♠"
+    var points: Int {
+        switch value {
+            case "3": return 30
+            case "As": return 11
+            case "2": return 10
+            case "K": return 4
+            case "Q": return 3
+            case "J": return 2
+            default: return 0
+        }
+    }
+}
+
+class Game: ObservableObject {
+    @Published var playerHand: [Card] = []
+    @Published var opponentHand: [Card] = []
+    @Published var tableCards: [Card] = []
+    @Published var playerScore = 0
+    @Published var opponentScore = 0
+    
+    private var allCards: [Card] = []
+    
+    init() {
+        setupDeck()
+        dealCards()
+    }
+    
+    private func setupDeck() {
+        let values = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "As"]
+        let suits = ["♥", "♦", "♣", "♠"]
+        
+        for suit in suits {
+            for value in values {
+                allCards.append(Card(value: value, suit: suit))
+            }
+        }
+        allCards.shuffle()
+    }
+    
+    private func dealCards() {
+        playerHand = Array(allCards[0..<26])
+        opponentHand = Array(allCards[26..<52])
+        tableCards = Array(allCards[52-4..<52]) // Son 4 kart yere
+    }
+    
+    func playCard(card: Card) {
+        // Kart oynama ve puan hesaplama mantığı burada
+        // Örnek: Eşleşme kontrolü, puan ekleme vs.
+    }
+}
